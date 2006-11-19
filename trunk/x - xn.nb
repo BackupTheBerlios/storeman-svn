@@ -1,0 +1,128 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.0'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[      2808,         85]*)
+(*NotebookOutlinePosition[      3455,        107]*)
+(*  CellTagsIndexPosition[      3411,        103]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[
+    \(Solve[
+      yn \[Equal] 
+        y - \(cy*\((height - horizont - 1)\)\)\/\(y - horizont\) - cy, 
+      y]\)], "Input"],
+
+Cell[BoxData[
+    \({{y \[Rule] 
+          1\/2\ \((cy + horizont + 
+                yn - \[Sqrt]\((\((cy + horizont + yn)\)\^2 + 
+                      4\ \((\(-cy\) + cy\ height - 2\ cy\ horizont - 
+                            horizont\ yn)\))\))\)}, {y \[Rule] 
+          1\/2\ \((cy + horizont + 
+                yn + \[Sqrt]\((\((cy + horizont + yn)\)\^2 + 
+                      4\ \((\(-cy\) + cy\ height - 2\ cy\ horizont - 
+                            horizont\ yn)\))\))\)}}\)], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(Clear[x, xn];\)\), "\n", 
+    \(Solve[
+      xn\  == \ x + 
+          cx*dx*\((1 - \((y - horizont)\)\/\((height\  - \ horizont\  - 1)\))\
+\), x]\)}], "Input"],
+
+Cell[BoxData[
+    \({{x \[Rule] \(cx\ dx - cx\ dx\ height - xn + height\ xn - horizont\ xn \
++ cx\ dx\ y\)\/\(\(-1\) + height - horizont\)}}\)], "Output"]
+}, Open  ]]
+},
+FrontEndVersion->"5.0 for Microsoft Windows",
+ScreenRectangle->{{0, 1400}, {0, 907}},
+WindowSize->{879, 740},
+WindowMargins->{{119, Automatic}, {Automatic, -13}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 139, 4, 44, "Input"],
+Cell[1918, 59, 498, 9, 76, "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[2453, 73, 182, 5, 65, "Input"],
+Cell[2638, 80, 154, 2, 44, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+
