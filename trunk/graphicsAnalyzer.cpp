@@ -22,6 +22,17 @@ tGraphicsAnalyzer::tGraphicsAnalyzer(){
 	colorDetector = new tColorDetector();
 	chessboardFinder = new tChessboardFinder();
 
+	/* 
+	 *	mozem si prednastavit par premennych, specifickych pre kameru,
+	 *	aby som nehladal pociatocne nastavenie rucne.
+	 */
+	perspective->cx = 260*perspective->cy/100000;
+	perspective->horizont = 139 - 200;
+	perspective->cs = 253;
+	perspective->scale = perspective->cs / perspective->cy;
+	canny->threshold2 = 180;
+
+
 	//log = new tLogger("debug.log");
 
 	font = new CvFont();
@@ -83,7 +94,7 @@ void tGraphicsAnalyzer::analyze(){
 	stopwatch[PERSPECTIVE].stop();
 
 	stopwatch[CHESSBOARDFINDER].start();
-	chessboardFinder->make(img_bw,dst_bw);
+	chessboardFinder->make(img_bw, dst_bw, dst);
 	stopwatch[CHESSBOARDFINDER].stop();
 	
 	//cvCopyImage(dst_bw, img_bw);

@@ -133,11 +133,15 @@ public:
 };
 
 class tChessboardFinder{
+private:
+	double angle(CvPoint* pt1, CvPoint* pt2, CvPoint* pt0);
+	void find2Dcluster(CvSeq points, CvSeq clusters);
 public:
+	int threshDown, threshUp;
 	CvPoint origin, vector;
 	bool found;
 	tChessboardFinder();
-	void make(IplImage *img_bw, IplImage *tmp_bw);
+	void make(IplImage *img_bw, IplImage *tmp_bw, IplImage *tmp);
 };
 
 #endif

@@ -16,8 +16,8 @@ tColorDetector::tColorDetector(){
 void tColorDetector::drawSample(IplImage* img){
 	//printf("prva farba: %d, %d, %d\ndruha farba: %d, %d, %d\n",commonColor[0][0],commonColor[0][1],commonColor[0][2],commonColor[1][0],commonColor[1][1],commonColor[1][2]);
 	//nakresilm dva stvorce danych farieb do obrazu
-	cvRectangle(img,cvPoint(0,18),cvPoint(80,34),cvScalar(commonColor[0][0],commonColor[0][1],commonColor[0][2]),CV_FILLED);
-	cvRectangle(img,cvPoint(0,36),cvPoint(80,52),cvScalar(commonColor[1][0],commonColor[1][1],commonColor[1][2]),CV_FILLED);
+	cvRectangle(img,cvPoint(0,18),cvPoint(16,34),cvScalar(commonColor[0][0],commonColor[0][1],commonColor[0][2]),CV_FILLED);
+	cvRectangle(img,cvPoint(0,36),cvPoint(16,52),cvScalar(commonColor[1][0],commonColor[1][1],commonColor[1][2]),CV_FILLED);
 }
 
 void tColorDetector::make(IplImage* img){
@@ -186,7 +186,7 @@ void tHough::make(IplImage *img){
 
 	//adaptacia houghovho algoritmu na viditelnost
 	if (lineStorage->cols > lineNumber) threshold = int(threshold * (1 + adaptacia));
-	else if (lineStorage->cols < lineNumber) threshold = int(threshold * (1 - adaptacia));
+	else if (lineStorage->cols < lineNumber) threshold = max(int(threshold * (1 - adaptacia)),1);
 }
 
 tAngleDetector::tAngleDetector(){
@@ -355,19 +355,64 @@ void tPerspective::make(IplImage *img_bw, IplImage *dst_bw){
 
 tChessboardFinder::tChessboardFinder(){
 	found = false;
+	threshDown = 300;
+	threshUp = 6000;
 }
 
-void tChessboardFinder::make(IplImage *img_bw, IplImage *tmp_bw){
-	CvSeq *aprox, *contours, *result;
+void tChessboardFinder::make(IplImage *img_bw, IplImage *tmp_bw, IplImage *tmp){
+	CvSeq *aprox, *contours;
+	CvSeq *corners, *crossPoints;
+
 	CvMemStorage* storage = cvCreateMemStorage(0); //zatial neviem naco... treba to v cvApprox Poly a v cvFindContours
+	CvScalar color = CV_RGB(255, 0, 0);
+
 	cvDilate(img_bw, tmp_bw);
+	//cvCopy(img_bw, tmp_bw);
+	cvCvtColor(tmp_bw, tmp, CV_GRAY2BGR);
+
 	// find contours and store them all as a list
-	cvFindContours( tmp_bw, storage, &contours, sizeof(CvContour),CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE, cvPoint(0,0) );
-	aprox = cvApproxPoly( contours, sizeof(CvContour), storage,CV_POLY_APPROX_DP, cvContourPerimeter(contours)*0.02, 0 );
+	cvFindContours(tmp_bw, storage, &contours, sizeof(CvContour),CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE, cvPoint(0,0) );
+	while (contours){
+		aprox = cvApproxPoly(contours, sizeof(CvContour), storage,CV_POLY_APPROX_DP, cvContourPerimeter(contours)*0.02, 0 );		
+		//ak ma obrys 4 strany, ma pozadovany velkost (vecsiu ako 1000), a je konvexny
+		//printf("total=%d, contourArea=%.0f, convexity=%d\n",aprox->total, fabs(cvContourArea(aprox,CV_WHOLE_SEQ)), cvCheckContourConvexity(aprox));
+		if(aprox->total == 4 && GA::bounds(abs(cvContourArea(aprox,CV_WHOLE_SEQ)),threshDown,threshUp) && cvCheckContourConvexity(aprox)){
+            double s = 0;
+            for(int i = 0; i < 5; i++){
+                // find minimum angle between joint
+                // edges (maximum of cosine)
+                if(i >= 2) {
+                    double t = fabs(angle(
+						(CvPoint*)cvGetSeqElem(aprox, i),
+						(CvPoint*)cvGetSeqElem(aprox, i-2),
+						(CvPoint*)cvGetSeqElem(aprox, i-1)));
+                    s = s > t ? s : t;
+                }
+            }
+            // if cosines of all angles are small
+            // (all angles are ~90 degree) then write quandrange
+            // vertices to resultant sequence 
+            if( s < 0.3 ) for(int i = 0; i < 4; i++) 
+				//cvSeqPush(squares, (CvPoint*)cvGetSeqElem(result, i));
+				cvDrawContours(tmp , aprox, color, color, -1, 1/*CV_FILLED*/, 8);
+				//TODO: pozbierat 4 z piatich vrcholov a dat ich do sekvencie corners, poslat do find2Dclusters				
+        }
 
+		//cvPolyLine( tmp_bw, &rect, &count, 1, 1, CV_RGB(0,255,0), 3, CV_AA, 0 );
+		contours = contours->h_next;
+	}
+	//TODO: podla najdenych clusterov napasovat sachovnicu definovanu originom a vektorom
+	cvShowImage("test",tmp);	
+}
 
-	cvPolyLine( tmp_bw, &rect, &count, 1, 1, CV_RGB(0,255,0), 3, CV_AA, 0 );
+double tChessboardFinder::angle(CvPoint* pt1, CvPoint* pt2, CvPoint* pt0){
+    double dx1 = pt1->x - pt0->x;
+    double dy1 = pt1->y - pt0->y;
+    double dx2 = pt2->x - pt0->x;
+    double dy2 = pt2->y - pt0->y;
+    return (dx1*dx2 + dy1*dy2)/sqrt((dx1*dx1 + dy1*dy1)*(dx2*dx2 + dy2*dy2) + 1e-10);
+}
 
-
-	cvShowImage("test",tmp_bw);	
+void tChessboardFinder::find2Dcluster(CvSeq points, CvSeq clusters){
+	//TODO: vyhladat clustre a vratit v sekvencii
 }
