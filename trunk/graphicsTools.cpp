@@ -395,7 +395,7 @@ void tChessboardFinder::make(IplImage *img_bw, IplImage *tmp_bw, IplImage *tmp){
             if( s < 0.3 ) for(int i = 0; i < 4; i++) 
 				//cvSeqPush(squares, (CvPoint*)cvGetSeqElem(result, i));
 				cvDrawContours(tmp , aprox, color, color, -1, 1/*CV_FILLED*/, 8);
-				//TODO: pozbierat 4 z piatich vrcholov a dat ich do sekvencie corners, poslat do find2Dclusters				
+				//TODO: pozbierat 4 z piatich vrcholov a dat ich do sekvencie corners, poslat do find2Dclusters
         }
 
 		//cvPolyLine( tmp_bw, &rect, &count, 1, 1, CV_RGB(0,255,0), 3, CV_AA, 0 );

@@ -10,7 +10,6 @@ int main(int argc, char** argv){
 	string filename;
 	bool verbose = false;
 	bool video = false;
-
 	if (argc == 3) {
 		filename = argv[2];
 		if (strcmp(argv[1],"-v") || strcmp(argv[1],"/v")) verbose = true;
